@@ -12,8 +12,10 @@ class RuleBasedIntentParser:
     """
     
     @staticmethod
-    def parse(query: str) -> dict:
+    def parse(query: str, structured_intent: dict = None) -> dict:
         query_lower = query.lower()
+        if not structured_intent:
+            structured_intent = {}
         
         # 1. Determine query_type
         if any(w in query_lower for w in ["compare", "vs", "versus"]):
@@ -61,4 +63,20 @@ class RuleBasedIntentParser:
             params["market_share_threshold"] = 0.5     # e.g., flag if drop below 50%
             params["distribution_threshold"] = 0.8     # e.g., flag if distributed below 80%
             
-        return params
+        # 4. Integrate structured_intent bounds explicitly overriding defaults securely
+        params.update(structured_intent)
+        
+        # 5. Extract finalized template paths natively reliably
+        template_map = {
+            "simple_kpi": "kpi_timeseries",
+            "comparison": "compare_periods",
+            "performance_decline": "kpi_drivers",
+            "compliance_check": "compliance_check"
+        }
+        sql_template = template_map.get(params["query_type"], "kpi_timeseries")
+        
+        return {
+            "query_type": params["query_type"],
+            "sql_template": sql_template,
+            "template_params": params
+        }

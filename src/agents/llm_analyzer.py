@@ -2,7 +2,7 @@ import json
 from google import genai
 from google.genai import types
 from typing import Dict, Any, List
-from config.settings import GEMINI_API_KEY
+from config.settings import get_gemini_key
 
 class LLMAnalyzer:
     """
@@ -12,10 +12,10 @@ class LLMAnalyzer:
     
     @staticmethod
     def analyze(query_type: str, results: List[Dict[str, Any]], parsed_intent: Dict[str, Any]) -> dict:
-        if not GEMINI_API_KEY:
-            raise ValueError("GEMINI_API_KEY is not configured.")
+        # Load API key dynamically and raise ValueError gracefully if missing
+        api_key = get_gemini_key()
             
-        client = genai.Client(api_key=GEMINI_API_KEY)
+        client = genai.Client(api_key=api_key)
         
         # Enforce compactness to limit token costs natively
         compact_results = results[:50]

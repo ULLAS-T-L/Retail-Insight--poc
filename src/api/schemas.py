@@ -31,3 +31,4 @@ class AnalyzeResponse(BaseModel):
     kpi_data: List[Dict[str, Any]] = Field(description="Structured JSON results from the database")
     analysis: AnalysisResult = Field(description="Analytical breakdown splitting into summary, drivers, and actionable recommendations")
     compliance_flags: Optional[List[str]] = Field(None, description="Any detected compliance violations (if query_type is compliance_check)")
+    metadata: Optional[Dict[str, Any]] = Field(None, description="Analytical limits metadata bounds (LangGraph vs Legacy).")
