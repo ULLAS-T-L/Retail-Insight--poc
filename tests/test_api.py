@@ -10,8 +10,10 @@ def test_api_health():
     assert response.status_code == 200
 
 @patch('src.agents.llm_analyzer.LLMAnalyzer.analyze')
-def test_analyze_endpoint_simple_kpi(mock_analyze):
+@patch('src.data.query_runner.QueryRunner.run_template')
+def test_analyze_endpoint_simple_kpi(mock_run_template, mock_analyze):
     # Mock LLM securely so CI/CD doesn't need GEMINI_API_KEY
+    mock_run_template.return_value = [{"brand": "BetaBrand", "net_sales": 1000}]
     mock_analyze.return_value = {
         "summary": "Mocked test summary",
         "drivers": [],

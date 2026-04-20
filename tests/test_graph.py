@@ -7,8 +7,10 @@ def graph():
     return compile_workflow()
 
 @patch('src.agents.llm_analyzer.LLMAnalyzer.analyze')
-def test_langgraph_compliance_routing(mock_analyze, graph):
+@patch('src.data.query_runner.QueryRunner.run_template')
+def test_langgraph_compliance_routing(mock_run_template, mock_analyze, graph):
     # Mock LLM to test pure graph traversal unconditionally efficiently
+    mock_run_template.return_value = [{"brand": "AlphaBrand", "distribution": 40}]
     mock_analyze.return_value = {
         "summary": "Mocked test summary",
         "drivers": [],
