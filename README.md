@@ -1,43 +1,53 @@
-# Retail Insights Platform (Part 3)
+# Retail Insights Platform
 
-A completely modular, production-ready LangGraph-orchestrated orchestration engine capable of mathematically retrieving, parsing, validating, and explaining operational business compliance constraints securely dynamically locally effectively without any unmapped deviations flawlessly.
+A modular, production-ready AI orchestration engine designed for retail analytics. The platform uses a LangGraph-orchestrated workflow to mathematically retrieve, parse, validate, and explain operational business KPIs and compliance constraints safely and accurately.
 
 ## Features
 
-- **Local Inference:** Fully executes via `uvicorn` explicitly dynamically effortlessly.
-- **LangGraph Routing Pipeline:** Automatically routes between simple KPIs, deep performance constraints, and explicit compliance rules statically natively safely smoothly locally.
-- **ChromaDB RAG Vectors:** Integrates local structural bindings for deep context effortlessly logically completely powerfully comprehensively.
-- **Dual Persistent Memory:** SQLite backs Episodic chains; ChromaDB maps Semantic embeddings smoothly locally safely cleanly clearly effectively.
-- **Observability Triggers:** Decorates critical nodes routing specific performance JSON tracking natively efficiently reliably accurately.
-- **Strict Guardrails:** Validates outputs safely against extracted limits avoiding generation matrices dynamically efficiently flawlessly strongly neatly properly securely safely carefully tightly cleanly expertly solidly smoothly tightly effortlessly natively properly reliably effectively safely nicely dynamically elegantly seamlessly flawlessly.
+- **Local Inference:** Fully executes via `uvicorn` for local, low-latency API access.
+- **LangGraph Routing Pipeline:** Automatically routes user intents between simple KPIs, deep performance constraints, and compliance checks.
+- **ChromaDB RAG Vectors:** Integrates local vector embeddings to provide structural and policy context for regulatory compliance.
+- **Dual Persistent Memory:** Uses an episodic memory store (SQLite) and semantic memory (ChromaDB) to maintain conversational context.
+- **Observability:** Decorates critical API nodes to route performance metrics and tracing data to standard structured JSON logs.
+- **Strict Guardrails:** Validates outputs and isolates logic generation to guarantee that the LLM only operates on concrete database parameters.
 
 ## How to Run Locally
 
-1. Create constraints manually:
-   `python -m venv .venv`  
-   `.venv\Scripts\activate`
+1. Create and activate a Python virtual environment:
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate
+   ```
 
-2. Bind variables smoothly natively safely elegantly cleanly intelligently:
-   `pip install -r requirements.txt`
+2. Install the necessary dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-3. Instantiate standard testing bounds flexibly securely efficiently optimally carefully logically stably robustly dynamically correctly:
-   `uvicorn src.main:app --host 127.0.0.1 --port 8000 --reload`
+3. Spin up the FastAPI server:
+   ```bash
+   uvicorn src.main:app --host 127.0.0.1 --port 8000 --reload
+   ```
 
 ## How to Run with Docker
 
-1. Ensure the Docker Daemon is explicitly running.
-2. Build and stand up natively gracefully efficiently intelligently solidly reliably smoothly perfectly:
-   `docker-compose up --build -d`
+If you prefer to run the architecture in a containerized environment:
+
+1. Ensure Docker Desktop is running.
+2. Build and stand up the image:
+   ```bash
+   docker-compose up --build -d
+   ```
 
 ## CI/CD 
 
-GitHub Actions executes the `.github/workflows/ci.yml` strictly evaluating logic traces accurately mapping pure validation layers correctly successfully reliably.
+GitHub Actions executes the `.github/workflows/ci.yml` file, automatically verifying code integrity with `pytest` on every push to the `main` branch.
 
 ## Guardrails 
 
-- Input lengths capped perfectly securely efficiently correctly automatically appropriately natively logically securely compactly natively cleanly safely efficiently gracefully.
-- LLM response shapes strictly parse pure keys safely automatically mapping unpassed JSON safely dynamically thoroughly optimally precisely flawlessly cleanly flexibly.
+- **Input Constraints:** Enforces 500-character input limits and rejects explicitly malicious SQL patterns prior to LLM evaluation.
+- **Output Constraints:** Synthetically matches the LLM response to confirm that purely returned numerical metrics are not hallucinated.
 
 ## Future Scaling
 
-Currently designed completely stateless outside of explicit local SQLite matrices securely natively successfully properly solidly mathematically confidently smoothly accurately dynamically firmly locally flawlessly robustly stably reliably intelligently cleanly compactly confidently elegantly efficiently safely confidently correctly flexibly effectively beautifully correctly successfully accurately dynamically safely flawlessly exactly correctly correctly completely cleanly accurately locally nicely securely logically reliably securely safely confidently beautifully. We can explicitly push vectors tightly perfectly properly smartly efficiently. 
+Currently, the system is designed to be fully stateless outside of the specific local SQLite stores. Moving forward, the vector and relational datasets can be migrated to managed cloud instances, and the LangGraph orchestrator can be further expanded to include more specialized retail-agent tools.

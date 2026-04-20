@@ -21,16 +21,16 @@ We have stubbed exact file module directories representing scalable bounds:
 - Separated explicitly between semantic profiling (`semantic.py` to identify behavioral patterns) and episodic chat queues (`episodic.py` enabling short term continuity bridging missing conversational parameters).
 
 ### 4. Safety & Observability Defaults
-- `src/guardrails/hooks.py`: Validating API input structures explicitly verifying injection mitigation algorithms natively natively restricting SQL mappings securely.
-- `src/observability/tracer.py`: Recording and tracking dynamic execution traces effectively generating profound audit trails.
+- `src/guardrails/hooks.py`: Validating API input structures and verifying injection mitigation algorithms.
+- `src/observability/tracer.py`: Recording and tracking dynamic execution traces effectively.
 
 ### 5. Part 2 Graceful Fallback Strategies
 To prevent cascade failures during unpredictable network boundaries, Part 2 enforces:
-1. **RAG Extraction Failure**: Bypasses strictly catching local ChromaDB directory disconnects outputting empty `""` limits actively cleanly allowing Gemini to interpret pure mathematical structures without policy restraints.
-2. **Memory Disconnects**: `SQLite` connection drops dynamically catch inside `manager.py` defaulting queries natively into singular context evaluations seamlessly securely seamlessly.
-3. **Graph Errors**: Native exceptions routing conditionally out of API interfaces dynamically structurally properly tightly without panicking gracefully successfully. 
+1. **RAG Extraction Failure**: Bypasses local ChromaDB directory disconnects and outputs empty context, allowing Gemini to continue without policy restraints.
+2. **Memory Disconnects**: `SQLite` connection drops are caught natively, defaulting queries into singular context evaluations.
+3. **Graph Errors**: Native exceptions conditionally route out of API interfaces without panicking the server. 
 
 ## Future Part 3 Extensions (DevOps & Guardrails)
-- **Dockerization**: We will bundle the API, ChromaDB local vectors, and SQLite matrices into unified `docker-compose.yml` images targeting immutable builds natively.
+- **Dockerization**: We will bundle the API, ChromaDB local vectors, and SQLite matrices into unified `docker-compose.yml` image builds.
 - **CI/CD Triggers**: GitHub Actions will automatically hook `pytest` running boundary evaluations against `src/graph` natively validating State objects locally.
-- **Active Guardrails**: The `hooks.py` modules will be attached directly to LangGraph as pre-evaluation Nodes catching explicit SQL hallucination variables natively cleanly reliably accurately optimally securely.
+- **Active Guardrails**: The `hooks.py` modules will be attached directly to LangGraph as pre-evaluation Nodes catching explicit SQL hallucination variables natively cleanly.
