@@ -21,13 +21,17 @@ def parse_intent_node(state: Dict[str, Any]) -> Dict[str, Any]:
     # Fetch Persistent User Memory dynamically
     mem_context = get_context(session_id, query)
     
-    # Maintain robust rule-based parsing initially
-    parsed_intent = intent_parser.parse(query, None)
+    # Maintain robust rule-based parsing initially leveraging injected schemas seamlessly
+    pre_structured = state.get("parsed_intent")
+    parsed_intent = intent_parser.parse(query, pre_structured)
     
     return {
         "parsed_intent": parsed_intent,
         "episodic_history": mem_context.get("episodic_history", []),
-        "semantic_context": mem_context.get("semantic_context", "")
+        "semantic_context": mem_context.get("semantic_context", ""),
+        "episodic_memory_used": bool(mem_context.get("episodic_history")),
+        "semantic_memory_used": bool(mem_context.get("semantic_context")),
+        "workflow_path": "parse_intent"
     }
 
 def retrieve_kpi_node(state: Dict[str, Any]) -> Dict[str, Any]:
@@ -39,7 +43,8 @@ def retrieve_kpi_node(state: Dict[str, Any]) -> Dict[str, Any]:
         results = query_runner.run_template(sql_template, parsed_intent["template_params"])
         return {
             "sql_template_used": sql_template,
-            "kpi_data": results
+            "kpi_data": results,
+            "workflow_path": state.get("workflow_path", "") + " -> retrieve_kpi"
         }
     except Exception as e:
         return {"error": f"Database resolution crashed conditionally bounds: {str(e)}"}
@@ -51,7 +56,11 @@ def retrieve_compliance_node(state: Dict[str, Any]) -> Dict[str, Any]:
     # Native explicit chromadb extraction limits mapped
     strict_context = retrieve_compliance_context(query)
     
-    return {"compliance_context": strict_context}
+    return {
+        "compliance_context": strict_context,
+        "rag_used": bool(strict_context),
+        "workflow_path": state.get("workflow_path", "") + " -> retrieve_compliance"
+    }
 
 def compliance_check_node(state: Dict[str, Any]) -> Dict[str, Any]:
     """Evaluates rule bounds securely against active quantitative extractions gracefully."""
@@ -66,7 +75,10 @@ def compliance_check_node(state: Dict[str, Any]) -> Dict[str, Any]:
             if dist < 60:
                 flags.append(f"CRITICAL RAG RULE: {row.get('brand', 'Unknown')} distribution at {dist}% falls strictly below rigid bounds.")
                 
-    return {"compliance_flags": flags}
+    return {
+        "compliance_flags": flags,
+        "workflow_path": state.get("workflow_path", "") + " -> compliance_check"
+    }
 
 def generate_answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
     """Fuses all context vectors and SQL metrics perfectly invoking GenAI structurally accurately."""
@@ -90,4 +102,7 @@ def generate_answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
     except Exception as e:
         analysis_result = deterministic_analyzer.analyze(query_type, kpi_data, parsed)
         
-    return {"analysis": analysis_result}
+    return {
+        "analysis": analysis_result,
+        "workflow_path": state.get("workflow_path", "") + " -> generate_answer"
+    }

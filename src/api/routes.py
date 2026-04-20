@@ -2,9 +2,18 @@ import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Security
+from fastapi.security.api_key import APIKeyHeader
 from typing import Dict, Any
 from src.api.schemas import AnalyzeRequest, AnalyzeResponse
+from config.settings import STATIC_API_KEY
+
+api_key_header = APIKeyHeader(name="X-API-KEY", auto_error=False)
+
+def get_api_key(api_key_header: str = Security(api_key_header)):
+    if not api_key_header or api_key_header != STATIC_API_KEY:
+        raise HTTPException(status_code=403, detail="Could not validate credentials locally gracefully cleanly.")
+    return api_key_header
 
 # Migrated dynamically to new isolated services architecture
 from src.services.analyzer_service import AnalyzerService
@@ -13,11 +22,19 @@ router = APIRouter()
 analyzer_service = AnalyzerService()
 
 @router.post("/analyze", response_model=AnalyzeResponse)
-async def analyze_kpi(request: AnalyzeRequest):
+async def analyze_kpi(request: AnalyzeRequest, api_key: str = Depends(get_api_key)):
     try:
+        # Implement input Guardrails dynamically preventing injection
+        from src.guardrails.hooks import validate_input, GuardrailException
+        
+        try:
+            safe_query = validate_input(request.query)
+        except GuardrailException as ge:
+            raise HTTPException(status_code=400, detail=str(ge))
+
         # Orchestrate execution via Analyzer Service
         result = analyzer_service.process_query(
-            raw_query=request.query,
+            raw_query=safe_query,
             structured_intent=request.structured_intent.model_dump(exclude_unset=True) if request.structured_intent else None
         )
 

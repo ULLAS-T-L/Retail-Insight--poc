@@ -24,6 +24,12 @@ We have stubbed exact file module directories representing scalable bounds:
 - `src/guardrails/hooks.py`: Validating API input structures explicitly verifying injection mitigation algorithms natively natively restricting SQL mappings securely.
 - `src/observability/tracer.py`: Recording and tracking dynamic execution traces effectively generating profound audit trails.
 
+### 5. Part 2 Graceful Fallback Strategies
+To prevent cascade failures during unpredictable network boundaries, Part 2 enforces:
+1. **RAG Extraction Failure**: Bypasses strictly catching local ChromaDB directory disconnects outputting empty `""` limits actively cleanly allowing Gemini to interpret pure mathematical structures without policy restraints.
+2. **Memory Disconnects**: `SQLite` connection drops dynamically catch inside `manager.py` defaulting queries natively into singular context evaluations seamlessly securely seamlessly.
+3. **Graph Errors**: Native exceptions routing conditionally out of API interfaces dynamically structurally properly tightly without panicking gracefully successfully. 
+
 ## Future Part 3 Extensions (DevOps & Guardrails)
 - **Dockerization**: We will bundle the API, ChromaDB local vectors, and SQLite matrices into unified `docker-compose.yml` images targeting immutable builds natively.
 - **CI/CD Triggers**: GitHub Actions will automatically hook `pytest` running boundary evaluations against `src/graph` natively validating State objects locally.

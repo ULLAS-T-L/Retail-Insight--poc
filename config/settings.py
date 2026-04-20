@@ -21,9 +21,12 @@ def get_gemini_key() -> str:
     return key
 
 # Part 2 Architecture Flags
-USE_LANGGRAPH = True
-USE_RAG = True
-USE_EPISODIC_MEMORY = True
-USE_SEMANTIC_MEMORY = True
-USE_GUARDRAILS = False
-USE_OBSERVABILITY = False
+USE_LANGGRAPH = os.getenv("USE_LANGGRAPH", "True").lower() in ["true", "1"]
+USE_RAG = os.getenv("USE_RAG", "True").lower() in ["true", "1"]
+USE_EPISODIC_MEMORY = os.getenv("USE_EPISODIC_MEMORY", "True").lower() in ["true", "1"]
+USE_SEMANTIC_MEMORY = os.getenv("USE_SEMANTIC_MEMORY", "True").lower() in ["true", "1"]
+USE_GUARDRAILS = os.getenv("USE_GUARDRAILS", "True").lower() in ["true", "1"]
+USE_OBSERVABILITY = os.getenv("USE_OBSERVABILITY", "True").lower() in ["true", "1"]
+
+# Lightweight API Key check natively 
+STATIC_API_KEY = os.getenv("STATIC_API_KEY", "secure-retail-key-123")

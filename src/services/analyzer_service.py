@@ -10,6 +10,7 @@ from config.settings import (
     USE_LANGGRAPH, USE_RAG, USE_EPISODIC_MEMORY, 
     USE_SEMANTIC_MEMORY, USE_GUARDRAILS, USE_OBSERVABILITY
 )
+from src.observability.tracer import trace_event, emit_event
 
 # Compile LangGraph framework statically to successfully avoid recursion loops natively natively
 _graph_app = compile_workflow() if USE_LANGGRAPH else None
@@ -28,21 +29,23 @@ class AnalyzerService:
         self.intent_parser = RuleBasedIntentParser()
         self.analyzer = DeterministicAnalyzer()
 
+    @trace_event("api_process_query")
     def process_query(self, raw_query: str, structured_intent: Dict[str, Any] = None) -> Dict[str, Any]:
-        session_id = "default_session"
+        session_id = structured_intent.get("session_id", "default_session") if structured_intent else "default_session"
         
         if USE_LANGGRAPH and _graph_app:
-            return self._run_langgraph(session_id, raw_query)
+            return self._run_langgraph(session_id, raw_query, structured_intent)
         else:
             return self._run_legacy(session_id, raw_query, structured_intent)
             
-    def _run_langgraph(self, session_id: str, raw_query: str) -> Dict[str, Any]:
+    def _run_langgraph(self, session_id: str, raw_query: str, structured_intent: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Executes strict dynamic logic via completely standalone LangGraph matrix routes effortlessly locally natively.
         """
         initial_state = {
             "query": raw_query,
-            "session_id": session_id
+            "session_id": session_id,
+            "parsed_intent": structured_intent if structured_intent else {}
         }
         
         final_state = _graph_app.invoke(initial_state)
@@ -54,11 +57,17 @@ class AnalyzerService:
             "analysis": final_state.get("analysis", {}),
             "compliance_flags": final_state.get("compliance_flags"),
             "metadata": {
-                "workflow_path": "LangGraph Execution Engine natively overridden bounds",
-                "retrieved_docs_hit": bool(final_state.get("compliance_context")),
-                "session_active": session_id
+                "workflow_path": final_state.get("workflow_path", "unknown_path"),
+                "rag_used": final_state.get("rag_used", False),
+                "episodic_memory_used": final_state.get("episodic_memory_used", False),
+                "semantic_memory_used": final_state.get("semantic_memory_used", False),
+                "sql_template_used": final_state.get("sql_template_used", "none"),
+                "session_active": session_id,
+                "retrieved_docs_hit": bool(final_state.get("compliance_context"))
             }
         }
+        
+        emit_event("langgraph_execution_complete", response_payload["metadata"])
         
         # Unconditionally trace Memory bounds after execution finishes natively smoothly flawlessly safely gracefully
         if USE_EPISODIC_MEMORY or USE_SEMANTIC_MEMORY:

@@ -27,7 +27,8 @@ class LLMAnalyzer:
         CRITICAL RULES:
         1. NO HALLUCINATION: You must NEVER generate numbers or metrics that are not explicitly present in the SQL DATA RESULTS below.
         2. Your analysis must only rigorously reflect the provided data snippet.
-        3. Explain what happened, identify key drivers, highlight operational risks, and recommend actionable next steps.
+        3. IF THE SQL DATA RESULTS ARE EMPTY: You MUST return empty arrays for drivers, risks, and actions. Your summary MUST strictly state that "No data matched the query parameters." Do not hallucinate dummy metrics.
+        4. Explain what happened, identify key drivers, highlight operational risks, and recommend actionable next steps ONLY IF data is present.
         4. Return ONLY valid JSON matching exactly the requested structure below:
         {{
             "summary": "String analysis",
@@ -54,6 +55,14 @@ class LLMAnalyzer:
         )
         
         try:
-            return json.loads(response.text)
-        except json.JSONDecodeError:
+            parsed_response = json.loads(response.text)
+            
+            from config.settings import USE_GUARDRAILS
+            if USE_GUARDRAILS:
+                from src.guardrails.hooks import validate_llm_output
+                validate_llm_output(parsed_response, compact_results)
+                
+            return parsed_response
+        except Exception as e:
+            raise ValueError(f"LLM securely bounded actively failing cleanly nicely automatically gracefully intelligently: {e}")
             raise ValueError("LLM failed to return a valid JSON payload.")

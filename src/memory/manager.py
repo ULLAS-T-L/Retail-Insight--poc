@@ -16,10 +16,17 @@ def save_turn(session_id: str, user_query: str, agent_response: Dict[str, Any]) 
 
 def get_context(session_id: str, query: str) -> Dict[str, Any]:
     """
-    Fuses unified memory arrays extracting recent lists and long term semantic boundaries efficiently seamlessly.
+    Fuses unified memory arrays securely falling back statically smoothly seamlessly if extraction throws.
     """
-    recent = get_recent_history(session_id, limit=3)
-    semantic = retrieve_similar_context(session_id, query)
+    try:
+        recent = get_recent_history(session_id, limit=3)
+    except Exception:
+        recent = []
+        
+    try:
+        semantic = retrieve_similar_context(session_id, query)
+    except Exception:
+        semantic = ""
     
     return {
         "episodic_history": recent,

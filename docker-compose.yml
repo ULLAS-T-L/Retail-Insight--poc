@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./.chroma_db:/app/.chroma_db
+      - ./memory.db:/app/memory.db
+    env_file:
+      - .env
+    environment:
+      - USE_LANGGRAPH=True
+      - USE_RAG=True
+      - USE_EPISODIC_MEMORY=True
+      - USE_SEMANTIC_MEMORY=True
+      - USE_GUARDRAILS=True
+      - USE_OBSERVABILITY=True
+    restart: unless-stopped

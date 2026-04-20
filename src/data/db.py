@@ -10,7 +10,7 @@ class DatabaseWrapper:
     def __init__(self, db_path: str = DB_PATH):
         self.db_path = db_path
         
-    def execute_query(self, query: str, params: tuple = ()) -> List[Dict[str, Any]]:
+    def execute_query(self, query: str, params: Any = ()) -> List[Dict[str, Any]]:
         with sqlite3.connect(self.db_path) as conn:
             conn.row_factory = sqlite3.Row
             cursor = conn.cursor()

@@ -22,3 +22,8 @@ class AgentState(TypedDict, total=False):
     analysis: Optional[Dict[str, Any]]
     compliance_flags: Optional[List[str]]
     error: Optional[str]
+    
+    rag_used: bool
+    episodic_memory_used: bool
+    semantic_memory_used: bool
+    workflow_path: str

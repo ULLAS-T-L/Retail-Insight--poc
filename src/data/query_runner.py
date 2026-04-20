@@ -13,10 +13,5 @@ class QueryRunner:
         if template_key not in SQL_TEMPLATES:
             raise ValueError(f"Unknown template: {template_key}")
             
-        template_info = SQL_TEMPLATES[template_key]
-        sql = template_info["sql"]
-        required_params = template_info["required_params"]
-        
-        # Build strict parameter tuple matching required slots
-        param_tuple = tuple(params.get(p) for p in required_params)
-        return self.db.execute_query(sql, param_tuple)
+        sql = SQL_TEMPLATES[template_key]
+        return self.db.execute_query(sql, params)
