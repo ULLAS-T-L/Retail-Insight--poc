@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
 
 class StructuredIntent(BaseModel):
+    session_id: Optional[str] = Field("default_session", description="The session identifier for memory chaining.")
     brand: Optional[str] = None
     region: Optional[str] = None
     channel: Optional[str] = None
