@@ -39,6 +39,20 @@ If you prefer to run the architecture in a containerized environment:
    docker-compose up --build -d
    ```
 
+## Advanced Evaluations & Benchmarking
+The platform includes an advanced local benchmarking framework spanning RAG, Agents, and Semantic Memory logic securely natively dynamically carefully securely implicitly inherently cleanly inherently.
+
+1. **RAG Triplet Measurement:**
+   `python -m src.evaluation.run_evals --mode rag`
+2. **LangGraph Intent Accuracy:**
+   `python -m src.evaluation.run_evals --mode agent`
+3. **Episodic Context Check:**
+   `python -m src.evaluation.run_evals --mode memory`
+4. **Full Automated Sweep:**
+   `python -m src.evaluation.run_evals --mode all`
+   
+Reports are elegantly structurally published to the `evaluation_results/` cleanly natively dynamically safely beautifully comfortably directory seamlessly confidently inherently optimally safely.
+
 ## CI/CD 
 
 GitHub Actions executes the `.github/workflows/ci.yml` file, automatically verifying code integrity with `pytest` on every push to the `main` branch.

@@ -1,0 +1,162 @@
+{
+    "timestamp": "2026-04-25T13:15:14.308822",
+    "summary": {
+        "avg_hit_rate": 0.0,
+        "avg_mrr": 0.0,
+        "avg_precision": 0.0,
+        "avg_recall": 0.0,
+        "avg_route_accuracy": 0.1,
+        "avg_sql_template_accuracy": 0.5,
+        "avg_groundedness": 0.0,
+        "episodic_context_hit_rate": 1.0
+    },
+    "results": [
+        {
+            "id": "tc_02",
+            "query": "Check compliance violations for AlphaBrand.",
+            "expected_doc": "policy_brand_alpha.txt",
+            "hit_rate": 0,
+            "mrr": 0.0,
+            "precision": 0.0,
+            "recall": 0.0
+        },
+        {
+            "id": "tc_06",
+            "query": "What are the rules for DeltaBrand?",
+            "expected_doc": "policy_brand_delta.txt",
+            "hit_rate": 0,
+            "mrr": 0.0,
+            "precision": 0.0,
+            "recall": 0.0
+        },
+        {
+            "id": "tc_08",
+            "query": "Are they compliant with the shelf limits?",
+            "expected_doc": "policy_brand_gamma.txt",
+            "hit_rate": 0,
+            "mrr": 0.0,
+            "precision": 0.0,
+            "recall": 0.0
+        },
+        {
+            "id": "tc_01",
+            "route_match": 0,
+            "sql_match": 1,
+            "groundedness": 0.0
+        },
+        {
+            "id": "tc_02",
+            "route_match": 1,
+            "sql_match": 0,
+            "groundedness": 0.0
+        },
+        {
+            "id": "tc_03",
+            "route_match": 0,
+            "sql_match": 0,
+            "groundedness": 0.0
+        },
+        {
+            "id": "tc_04",
+            "route_match": 0,
+            "sql_match": 1,
+            "groundedness": 0.0
+        },
+        {
+            "id": "tc_05",
+            "route_match": 0,
+            "sql_match": 1,
+            "groundedness": 0.0
+        },
+        {
+            "id": "tc_06",
+            "route_match": 0,
+            "sql_match": 0,
+            "groundedness": 0.0
+        },
+        {
+            "id": "tc_07",
+            "route_match": 0,
+            "sql_match": 1,
+            "groundedness": 0.0
+        },
+        {
+            "id": "tc_08",
+            "route_match": 0,
+            "sql_match": 0,
+            "groundedness": 0.0
+        },
+        {
+            "id": "tc_09",
+            "route_match": 0,
+            "sql_match": 0,
+            "groundedness": 0.0
+        },
+        {
+            "id": "tc_10",
+            "route_match": 0,
+            "sql_match": 1,
+            "groundedness": 0.0
+        },
+        {
+            "id": "tc_01",
+            "episodic_hit": 0,
+            "semantic_hit": 0,
+            "is_follow_up": false
+        },
+        {
+            "id": "tc_02",
+            "episodic_hit": 1,
+            "semantic_hit": 0,
+            "is_follow_up": false
+        },
+        {
+            "id": "tc_03",
+            "episodic_hit": 1,
+            "semantic_hit": 0,
+            "is_follow_up": false
+        },
+        {
+            "id": "tc_04",
+            "episodic_hit": 1,
+            "semantic_hit": 0,
+            "is_follow_up": false
+        },
+        {
+            "id": "tc_05",
+            "episodic_hit": 1,
+            "semantic_hit": 0,
+            "is_follow_up": true
+        },
+        {
+            "id": "tc_06",
+            "episodic_hit": 1,
+            "semantic_hit": 0,
+            "is_follow_up": false
+        },
+        {
+            "id": "tc_07",
+            "episodic_hit": 1,
+            "semantic_hit": 0,
+            "is_follow_up": false
+        },
+        {
+            "id": "tc_08",
+            "episodic_hit": 1,
+            "semantic_hit": 0,
+            "is_follow_up": true
+        },
+        {
+            "id": "tc_09",
+            "episodic_hit": 1,
+            "semantic_hit": 0,
+            "is_follow_up": false
+        },
+        {
+            "id": "tc_10",
+            "episodic_hit": 1,
+            "semantic_hit": 0,
+            "is_follow_up": false
+        }
+    ]
+}

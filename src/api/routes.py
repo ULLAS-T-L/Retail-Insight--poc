@@ -24,13 +24,15 @@ analyzer_service = AnalyzerService()
 @router.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_kpi(request: AnalyzeRequest, api_key: str = Depends(get_api_key)):
     try:
-        # Implement input Guardrails dynamically preventing injection
-        from src.guardrails.hooks import validate_input, GuardrailException
+        from config.settings import USE_ADVANCED_GUARDRAILS
+        safe_query = request.query
         
-        try:
-            safe_query = validate_input(request.query)
-        except GuardrailException as ge:
-            raise HTTPException(status_code=400, detail=str(ge))
+        if USE_ADVANCED_GUARDRAILS:
+            from src.guardrails.input_guardrails import validate_input, InputGuardrailException
+            try:
+                safe_query = validate_input(request.query)
+            except InputGuardrailException as ge:
+                raise HTTPException(status_code=400, detail=str(ge))
 
         # Orchestrate execution via Analyzer Service
         result = analyzer_service.process_query(

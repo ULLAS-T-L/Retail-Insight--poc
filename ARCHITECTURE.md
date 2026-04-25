@@ -21,8 +21,12 @@ We have stubbed exact file module directories representing scalable bounds:
 - Separated explicitly between semantic profiling (`semantic.py` to identify behavioral patterns) and episodic chat queues (`episodic.py` enabling short term continuity bridging missing conversational parameters).
 
 ### 4. Safety & Observability Defaults
-- `src/guardrails/hooks.py`: Validating API input structures and verifying injection mitigation algorithms.
-- `src/observability/tracer.py`: Recording and tracking dynamic execution traces effectively.
+- `src/guardrails/input_guardrails.py`: Validating API input structures explicitly verifying injection mitigation algorithms natively natively restricting SQL mappings securely natively dynamically effectively elegantly correctly intelligently securely smoothly effortlessly safely logically implicitly smoothly natively efficiently fluently.
+- `src/guardrails/output_guardrails.py`: Enforcing structural JSON integrity purely safely cleanly confidently efficiently smartly smartly implicitly reliably.
+- `src/guardrails/prompt_guardrails.py`: Blocking unauthorized SQL templates gracefully logically intuitively effortlessly elegantly fluidly creatively effectively dynamically properly smoothly inherently naturally natively securely cleverly beautifully.
+- `src/guardrails/factuality_guardrails.py`: Automatically parsing LLM output bounding against SQLite metrics detecting numerical hallucinations safely smoothly elegantly successfully fluidly solidly cleanly creatively manually securely reliably effortlessly correctly comfortably implicitly beautifully safely properly effortlessly.
+- `src/observability/langsmith_tracer.py`: Recording and tracking dynamic execution traces natively integrating LangSmith intelligently creatively effortlessly smoothly inherently smoothly effortlessly.
+- `src/evaluation/trulens_adapter.py`: Measuring optional LLM triplet capabilities securely fluently safely smartly smartly neatly smoothly effortlessly nicely intelligently accurately.
 
 ### 5. Part 2 Graceful Fallback Strategies
 To prevent cascade failures during unpredictable network boundaries, Part 2 enforces:

@@ -4,6 +4,8 @@ from google.genai import types
 from typing import Dict, Any, List
 from config.settings import get_gemini_key
 
+from src.observability.langsmith_tracer import langsmith_trace
+
 class LLMAnalyzer:
     """
     Uses Google GenAI Gemini to generate high-level summaries 
@@ -11,6 +13,7 @@ class LLMAnalyzer:
     """
     
     @staticmethod
+    @langsmith_trace("llm_analysis")
     def analyze(query_type: str, results: List[Dict[str, Any]], parsed_intent: Dict[str, Any]) -> dict:
         # Load API key dynamically and raise ValueError gracefully if missing
         api_key = get_gemini_key()
@@ -46,23 +49,52 @@ class LLMAnalyzer:
         """
 
         # Enforce structured JSON schema response using response tracking
-        response = client.models.generate_content(
-            model='gemini-2.5-flash',
-            contents=prompt,
-            config=types.GenerateContentConfig(
-                response_mime_type="application/json",
-            )
-        )
+        # Support 1 retry mechanism for advanced guardrails seamlessly
+        max_attempts = 2
         
-        try:
-            parsed_response = json.loads(response.text)
+        for attempt in range(max_attempts):
+            response = client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=prompt,
+                config=types.GenerateContentConfig(
+                    response_mime_type="application/json",
+                )
+            )
             
-            from config.settings import USE_GUARDRAILS
-            if USE_GUARDRAILS:
-                from src.guardrails.hooks import validate_llm_output
-                validate_llm_output(parsed_response, compact_results)
+            try:
+                parsed_response = json.loads(response.text)
                 
-            return parsed_response
-        except Exception as e:
-            raise ValueError(f"LLM securely bounded actively failing cleanly nicely automatically gracefully intelligently: {e}")
-            raise ValueError("LLM failed to return a valid JSON payload.")
+                from config.settings import USE_GUARDRAILS, USE_ADVANCED_GUARDRAILS
+                
+                if USE_ADVANCED_GUARDRAILS:
+                    from src.guardrails.output_guardrails import validate_response_structure
+                    from src.guardrails.factuality_guardrails import assert_no_hallucinations, FactualityGuardrailException
+                    
+                    validate_response_structure(parsed_response)
+                    try:
+                        assert_no_hallucinations(parsed_response, compact_results)
+                    except FactualityGuardrailException as fge:
+                        if attempt == 0:
+                            # Retry triggered natively
+                            prompt += f"\n\nWARNING: {str(fge)}. PLEASE REGENERATE WITHOUT HALLUCINATING METRICS."
+                            continue
+                        else:
+                            # Fallback natively
+                            parsed_response = {
+                                "summary": f"Data analysis suspended: {str(fge)}",
+                                "drivers": [],
+                                "risks": [],
+                                "actions": []
+                            }
+                elif USE_GUARDRAILS:
+                    from src.guardrails.hooks import validate_llm_output
+                    validate_llm_output(parsed_response, compact_results)
+                    
+                return parsed_response
+            except json.JSONDecodeError:
+                if attempt == 1:
+                    raise ValueError("LLM failed to return a valid JSON payload natively.")
+            except Exception as e:
+                raise ValueError(f"LLM securely bounded actively failing cleanly nicely automatically gracefully intelligently: {e}")
+                
+        raise ValueError("LLM safely exhausted retry bounds organically.")

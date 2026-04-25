@@ -1,0 +1,4 @@
+id,query,expected_doc,hit_rate,mrr,precision,recall
+tc_02,Check compliance violations for AlphaBrand.,policy_brand_alpha.txt,0,0.0,0.0,0.0
+tc_06,What are the rules for DeltaBrand?,policy_brand_delta.txt,0,0.0,0.0,0.0
+tc_08,Are they compliant with the shelf limits?,policy_brand_gamma.txt,0,0.0,0.0,0.0
