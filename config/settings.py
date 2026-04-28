@@ -40,5 +40,15 @@ RAG_MIN_SCORE = float(os.getenv("RAG_MIN_SCORE", "0.5"))
 # Evaluation Paths
 EVAL_RESULTS_DIR = os.getenv("EVAL_RESULTS_DIR", "evaluation_results")
 
+# Enterprise Security Bounds (Part 4)
+USE_AUTH = os.getenv("USE_AUTH", "True").lower() in ["true", "1"]
+USE_RBAC = os.getenv("USE_RBAC", "True").lower() in ["true", "1"]
+USE_API_KEY_FALLBACK = os.getenv("USE_API_KEY_FALLBACK", "True").lower() in ["true", "1"]
+
+# JWT Core Configuration (Auto-generated fallback natively)
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "b3d4f102581622f99a5e4d25725f49e41981a8c0879f82d1c67d7168d60d3d52")
+JWT_ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("JWT_ACCESS_TOKEN_EXPIRE_MINUTES", "120"))
+
 # Lightweight API Key check natively 
 STATIC_API_KEY = os.getenv("STATIC_API_KEY", "secure-retail-key-123")

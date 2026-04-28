@@ -19,6 +19,9 @@ def block_prompt_injection(query: str) -> str:
         "reveal system prompt",
         "write sql directly",
         "generate arbitrary sql",
+        "give raw sql",
+        "bypass rbac",
+        "ignore roles",
         "forget your instructions"
     ]
     lower_query = query.lower()

@@ -14,6 +14,9 @@ app = FastAPI(
 # Connect all routes (from src/api/routes.py)
 app.include_router(router)
 
+from src.api.auth_routes import router as auth_router
+app.include_router(auth_router)
+
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Retail Insights API. Make POST requests to /analyze"}

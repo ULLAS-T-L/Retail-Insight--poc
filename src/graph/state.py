@@ -7,6 +7,7 @@ class AgentState(TypedDict, total=False):
     # Inputs
     query: str
     session_id: str
+    user_role: str
     
     # Processed logic
     parsed_intent: Optional[Dict[str, Any]]

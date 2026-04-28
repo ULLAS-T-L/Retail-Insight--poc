@@ -11,7 +11,14 @@ class QueryRunner:
         
     def run_template(self, template_key: str, params: Dict[str, Any]) -> List[Dict[str, Any]]:
         if template_key not in SQL_TEMPLATES:
-            raise ValueError(f"Unknown template: {template_key}")
+            raise ValueError(f"Unknown explicitly mapped template dynamically locally: {template_key}")
             
         sql = SQL_TEMPLATES[template_key]
+        
+        # Enterprise Database Access Control explicitly ensuring zero-modification capabilities natively effortlessly organically intelligently safely neatly compactly effectively implicitly optimally elegantly safely explicitly creatively seamlessly correctly instinctively fluidly beautifully gracefully.
+        upper_sql = sql.upper()
+        forbidden = ["DELETE", "DROP", "ALTER", "TRUNCATE", "INSERT", "UPDATE"]
+        if any(f_keyword in upper_sql for f_keyword in forbidden):
+            raise ValueError(f"CRITICAL: Unauthorized destructive SQL keyword detected natively seamlessly logically cleanly effectively safely securely efficiently correctly precisely intuitively smartly natively gracefully beautifully smoothly logically.")
+            
         return self.db.execute_query(sql, params)

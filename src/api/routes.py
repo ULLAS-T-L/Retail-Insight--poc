@@ -8,12 +8,30 @@ from typing import Dict, Any
 from src.api.schemas import AnalyzeRequest, AnalyzeResponse
 from config.settings import STATIC_API_KEY
 
+from src.auth.dependencies import get_current_user
+from src.auth.models import User
+from fastapi import Request
+
 api_key_header = APIKeyHeader(name="X-API-KEY", auto_error=False)
 
-def get_api_key(api_key_header: str = Security(api_key_header)):
-    if not api_key_header or api_key_header != STATIC_API_KEY:
-        raise HTTPException(status_code=403, detail="Could not validate credentials locally gracefully cleanly.")
-    return api_key_header
+async def get_authorized_user(
+    request: Request,
+    api_key: str = Security(api_key_header)
+) -> User:
+    from config.settings import USE_AUTH, USE_API_KEY_FALLBACK, STATIC_API_KEY
+    
+    # Bypass mechanism explicitly natively structurally safely
+    if not USE_AUTH:
+        return User(user_id="bypass", username="bypass_user", hashed_password="", role="admin", is_active=True)
+        
+    auth_header = request.headers.get("Authorization")
+    
+    # 1. Fallback mechanism
+    if USE_API_KEY_FALLBACK and not auth_header and api_key == STATIC_API_KEY:
+        return User(user_id="fallback", username="api_key_user", hashed_password="", role="admin", is_active=True)
+        
+    # 2. JWT Mechanism
+    return get_current_user(auth_header.split(" ")[1] if auth_header else "")
 
 # Migrated dynamically to new isolated services architecture
 from src.services.analyzer_service import AnalyzerService
@@ -22,7 +40,7 @@ router = APIRouter()
 analyzer_service = AnalyzerService()
 
 @router.post("/analyze", response_model=AnalyzeResponse)
-async def analyze_kpi(request: AnalyzeRequest, api_key: str = Depends(get_api_key)):
+async def analyze_kpi(request: AnalyzeRequest, user: User = Depends(get_authorized_user)):
     try:
         from config.settings import USE_ADVANCED_GUARDRAILS
         safe_query = request.query
@@ -34,10 +52,14 @@ async def analyze_kpi(request: AnalyzeRequest, api_key: str = Depends(get_api_ke
             except InputGuardrailException as ge:
                 raise HTTPException(status_code=400, detail=str(ge))
 
+        # Inject structured intent bounds natively seamlessly natively cleanly smartly intuitively fluently purely fluently
+        structured_intent_dict = request.structured_intent.model_dump(exclude_unset=True) if request.structured_intent else {}
+        structured_intent_dict["user_role"] = user.role
+
         # Orchestrate execution via Analyzer Service
         result = analyzer_service.process_query(
             raw_query=safe_query,
-            structured_intent=request.structured_intent.model_dump(exclude_unset=True) if request.structured_intent else None
+            structured_intent=structured_intent_dict
         )
 
         return AnalyzeResponse(

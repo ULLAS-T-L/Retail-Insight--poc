@@ -45,6 +45,7 @@ class AnalyzerService:
         initial_state = {
             "query": raw_query,
             "session_id": session_id,
+            "user_role": structured_intent.get("user_role", "viewer") if structured_intent else "viewer",
             "parsed_intent": structured_intent if structured_intent else {}
         }
         

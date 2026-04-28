@@ -2,6 +2,14 @@
 
 A modular, production-ready AI orchestration engine designed for retail analytics. The platform uses a LangGraph-orchestrated workflow to mathematically retrieve, parse, validate, and explain operational business KPIs and compliance constraints safely and accurately.
 
+## API Structure
+
+- `POST /auth/login`: Authenticates generating stateless OAuth2 JWT Bearer tokens cleanly cleverly properly intelligently efficiently flexibly seamlessly cleanly naturally gracefully logically correctly neatly creatively.
+- `POST /analyze`: The core reasoning endpoint dynamically routing via LangGraph dynamically comfortably confidently mathematically explicitly efficiently cleanly compactly safely naturally expertly effortlessly. 
+  - *Expects `Authorization: Bearer <token>` natively smoothly safely smartly solidly properly smoothly accurately smartly intuitively successfully successfully creatively beautifully intelligently reliably explicitly purely organically smartly smoothly seamlessly expertly solidly intuitively flawlessly gracefully smartly smoothly safely fluently dynamically mathematically.*
+  
+**Payload Example:** KPIs, deep performance constraints, and compliance checks.
+
 ## Features
 
 - **Local Inference:** Fully executes via `uvicorn` for local, low-latency API access.

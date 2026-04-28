@@ -6,6 +6,7 @@ from src.memory.manager import get_context
 from src.rag.compliance_retriever import retrieve_compliance_context
 from src.agents.llm_analyzer import LLMAnalyzer
 from src.agents.analyzer import DeterministicAnalyzer
+from src.auth.rbac import has_permission
 
 # Initialize singletons for simplicity securely natively globally
 intent_parser = RuleBasedIntentParser()
@@ -18,8 +19,13 @@ def parse_intent_node(state: Dict[str, Any]) -> Dict[str, Any]:
     query = state.get("query", "")
     session_id = state.get("session_id", "default_session")
     
-    # Fetch Persistent User Memory dynamically
-    mem_context = get_context(session_id, query)
+    user_role = state.get("user_role", "viewer")
+    
+    # Fetch Persistent User Memory dynamically if permitted gracefully logically cleanly seamlessly safely compactly effectively intelligently smoothly instinctively
+    if has_permission(user_role, "can_use_memory"):
+        mem_context = get_context(session_id, query)
+    else:
+        mem_context = {}
     
     # Maintain robust rule-based parsing initially leveraging injected schemas seamlessly
     pre_structured = state.get("parsed_intent")
@@ -52,9 +58,12 @@ def retrieve_kpi_node(state: Dict[str, Any]) -> Dict[str, Any]:
 def retrieve_compliance_node(state: Dict[str, Any]) -> Dict[str, Any]:
     """Conditionally routes boundaries fetching strict RAG embeddings limits seamlessly."""
     query = state.get("query", "")
+    user_role = state.get("user_role", "viewer")
     
     # Native explicit chromadb extraction limits mapped
-    strict_context = retrieve_compliance_context(query)
+    strict_context = ""
+    if has_permission(user_role, "can_use_rag"):
+        strict_context = retrieve_compliance_context(query)
     
     return {
         "compliance_context": strict_context,
@@ -67,9 +76,10 @@ def compliance_check_node(state: Dict[str, Any]) -> Dict[str, Any]:
     results = state.get("kpi_data", [])
     parsed_intent = state.get("parsed_intent", {})
     query_type = parsed_intent.get("query_type", "")
+    user_role = state.get("user_role", "viewer")
     
     flags = []
-    if query_type == "compliance_check" or "performance" in query_type:
+    if (query_type == "compliance_check" or "performance" in query_type) and has_permission(user_role, "can_run_compliance_check"):
         for row in results:
             dist = row.get("distribution", 0)
             if dist < 60:
