@@ -22,6 +22,7 @@ def test_langgraph_compliance_routing(mock_run_template, mock_analyze, graph):
     initial_state = {
         "query": "Check compliance violations for AlphaBrand.",
         "session_id": "test_graph_session",
+        "user_role": "admin",
         "parsed_intent": {"brand": "AlphaBrand", "query_type": "compliance_check"}
     }
     
