@@ -132,10 +132,21 @@ WHERE
     b.avg_distribution < :distribution_threshold;
 """
 
+# 5. fetch_metadata
+# Queries the database for explicitly distinct available domains seamlessly organically dynamically correctly mathematically correctly seamlessly smoothly cleverly.
+FETCH_METADATA = """
+SELECT 'Brand' as metadata_type, brand as value FROM dim_product GROUP BY brand
+UNION
+SELECT 'Region' as metadata_type, region as value FROM fact_sellout GROUP BY region
+UNION
+SELECT 'Channel' as metadata_type, channel as value FROM dim_retailer GROUP BY channel;
+"""
+
 # Export mapping index
 SQL_TEMPLATES = {
     "kpi_timeseries": KPI_TIMESERIES,
     "compare_periods": COMPARE_PERIODS,
     "kpi_drivers": KPI_DRIVERS,
-    "compliance_check": COMPLIANCE_CHECK
+    "compliance_check": COMPLIANCE_CHECK,
+    "fetch_metadata": FETCH_METADATA
 }

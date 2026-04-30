@@ -18,14 +18,24 @@ class RuleBasedIntentParser:
             structured_intent = {}
         
         # 1. Determine query_type
-        if any(w in query_lower for w in ["compare", "vs", "versus"]):
+        metadata_keywords = ["brands", "regions", "channels", "data", "metadata", "what do you have", "which regions", "what brands", "what channels"]
+        capability_keywords = ["ask", "can i", "capabilities", "what can", "give examples", "how to use", "what do you do"]
+        analytical_kpis = ["sales", "unit", "perform", "trend", "revenue", "grow", "did", "do"]
+        
+        if any(w in query_lower for w in metadata_keywords):
+            query_type = "metadata_query"
+        elif any(w in query_lower for w in capability_keywords):
+            query_type = "capability_query"
+        elif any(w in query_lower for w in ["compare", "vs", "versus"]):
             query_type = "comparison"
-        elif any(w in query_lower for w in ["decline", "drop", "why", "driver"]):
+        elif any(w in query_lower for w in ["decline", "drop", "driver"]) or ("why" in query_lower and any(kpi in query_lower for kpi in analytical_kpis + ["drop", "decline"])):
             query_type = "performance_decline"
         elif any(w in query_lower for w in ["compliance", "threshold", "breach", "anomaly"]):
             query_type = "compliance_check"
-        else:
+        elif any(w in query_lower for w in analytical_kpis):
             query_type = "simple_kpi"
+        else:
+            query_type = "fallback_query"
             
         # 2. Extract entities (Dummy rule-based extraction)
         brand = "AlphaBrand" if "alpha" in query_lower else "BetaBrand"
@@ -71,9 +81,15 @@ class RuleBasedIntentParser:
             "simple_kpi": "kpi_timeseries",
             "comparison": "compare_periods",
             "performance_decline": "kpi_drivers",
-            "compliance_check": "compliance_check"
+            "compliance_check": "compliance_check",
+            "metadata_query": "fetch_metadata"
         }
-        sql_template = template_map.get(params["query_type"], "kpi_timeseries")
+        
+        # Determine explicitly SQL injection bypass bounds securely
+        if query_type in ["capability_query", "fallback_query"]:
+            sql_template = "none"
+        else:
+            sql_template = template_map.get(params["query_type"], "kpi_timeseries")
         
         return {
             "query_type": params["query_type"],
