@@ -4,9 +4,9 @@ A modular, production-ready AI orchestration engine designed for retail analytic
 
 ## API Structure
 
-- `POST /auth/login`: Authenticates generating stateless OAuth2 JWT Bearer tokens cleanly cleverly properly intelligently efficiently flexibly seamlessly cleanly naturally gracefully logically correctly neatly creatively.
-- `POST /analyze`: The core reasoning endpoint dynamically routing via LangGraph dynamically comfortably confidently mathematically explicitly efficiently cleanly compactly safely naturally expertly effortlessly. 
-  - *Expects `Authorization: Bearer <token>` natively smoothly safely smartly solidly properly smoothly accurately smartly intuitively successfully successfully creatively beautifully intelligently reliably explicitly purely organically smartly smoothly seamlessly expertly solidly intuitively flawlessly gracefully smartly smoothly safely fluently dynamically mathematically.*
+- `POST /auth/login`: Authenticates generating stateless OAuth2 JWT Bearer tokens cleanly.
+- `POST /analyze`: The core reasoning endpoint dynamically routing via LangGraph.
+  - *Expects `Authorization: Bearer <token>`.*
   
 **Payload Example:** KPIs, deep performance constraints, and compliance checks.
 
@@ -48,7 +48,7 @@ If you prefer to run the architecture in a containerized environment:
    ```
 
 ## Advanced Evaluations & Benchmarking
-The platform includes an advanced local benchmarking framework spanning RAG, Agents, and Semantic Memory logic securely natively dynamically carefully securely implicitly inherently cleanly inherently.
+The platform includes an advanced local benchmarking framework spanning RAG, Agents, and Semantic Memory logic securely natively dynamically carefully securely implicitly inherently cleanly.
 
 1. **RAG Triplet Measurement:**
    `python -m src.evaluation.run_evals --mode rag`
@@ -59,8 +59,7 @@ The platform includes an advanced local benchmarking framework spanning RAG, Age
 4. **Full Automated Sweep:**
    `python -m src.evaluation.run_evals --mode all`
    
-Reports are elegantly structurally published to the `evaluation_results/` cleanly natively dynamically safely beautifully comfortably directory seamlessly confidently inherently optimally safely.
-
+Reports are elegantly structurally published to the `evaluation_results/`.
 ## CI/CD 
 
 GitHub Actions executes the `.github/workflows/ci.yml` file, automatically verifying code integrity with `pytest` on every push to the `main` branch.
