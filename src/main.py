@@ -11,6 +11,12 @@ app = FastAPI(
     version="0.1.0"
 )
 
+from src.middleware.rate_limiter import limiter, rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, rate_limit_exceeded_handler)
+
 # Connect all routes (from src/api/routes.py)
 app.include_router(router)
 

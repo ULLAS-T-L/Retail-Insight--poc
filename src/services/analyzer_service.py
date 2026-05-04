@@ -30,15 +30,15 @@ class AnalyzerService:
         self.analyzer = DeterministicAnalyzer()
 
     @trace_event("api_process_query")
-    def process_query(self, raw_query: str, structured_intent: Dict[str, Any] = None) -> Dict[str, Any]:
+    async def process_query(self, raw_query: str, structured_intent: Dict[str, Any] = None) -> Dict[str, Any]:
         session_id = structured_intent.get("session_id", "default_session") if structured_intent else "default_session"
         
         if USE_LANGGRAPH and _graph_app:
-            return self._run_langgraph(session_id, raw_query, structured_intent)
+            return await self._run_langgraph(session_id, raw_query, structured_intent)
         else:
-            return self._run_legacy(session_id, raw_query, structured_intent)
+            return await self._run_legacy(session_id, raw_query, structured_intent)
             
-    def _run_langgraph(self, session_id: str, raw_query: str, structured_intent: Dict[str, Any] = None) -> Dict[str, Any]:
+    async def _run_langgraph(self, session_id: str, raw_query: str, structured_intent: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Executes strict dynamic logic via completely standalone LangGraph matrix routes effortlessly locally natively.
         """
@@ -49,7 +49,7 @@ class AnalyzerService:
             "parsed_intent": structured_intent if structured_intent else {}
         }
         
-        final_state = _graph_app.invoke(initial_state)
+        final_state = await _graph_app.ainvoke(initial_state)
         
         response_payload = {
             "parsed_intent": final_state.get("parsed_intent", {}),
@@ -76,7 +76,7 @@ class AnalyzerService:
             
         return response_payload
 
-    def _run_legacy(self, session_id: str, raw_query: str, structured_intent: Dict[str, Any]) -> Dict[str, Any]:
+    async def _run_legacy(self, session_id: str, raw_query: str, structured_intent: Dict[str, Any]) -> Dict[str, Any]:
         """
         Maintains legacy local exact bounds seamlessly enabling identical fallback mechanisms gracefully smoothly securely natively.
         """
@@ -86,18 +86,19 @@ class AnalyzerService:
         template_params = parsed_intent["template_params"]
 
         try:
-            results = self.query_runner.run_template(sql_template, template_params)
+            results = await self.query_runner.run_template(sql_template, template_params)
         except Exception as e:
             raise Exception(f"Database error executing template bindings securely locally gracefully smoothly flawlessly safely cleanly: {str(e)}")
             
         try:
             from src.agents.llm_analyzer import LLMAnalyzer
-            analysis_result = LLMAnalyzer.analyze(query_type, results, parsed_intent)
+            import asyncio
+            analysis_result = await asyncio.to_thread(LLMAnalyzer.analyze, query_type, results, parsed_intent)
             
             if not all(k in analysis_result for k in ("summary", "drivers", "actions", "risks")):
                 raise ValueError("LLM securely dropped bounds safely seamlessly easily conditionally efficiently.")
         except Exception as e:
-            analysis_result = self.analyzer.analyze(query_type, results, parsed_intent)
+            analysis_result = deterministic_analyzer.analyze(query_type, results, parsed_intent)
             
         compliance_flags = self._evaluate_compliance_flags(query_type, results)
         

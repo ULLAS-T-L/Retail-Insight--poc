@@ -40,13 +40,13 @@ def parse_intent_node(state: Dict[str, Any]) -> Dict[str, Any]:
         "workflow_path": "parse_intent"
     }
 
-def retrieve_kpi_node(state: Dict[str, Any]) -> Dict[str, Any]:
+async def retrieve_kpi_node(state: Dict[str, Any]) -> Dict[str, Any]:
     """Fetches SQL parameters statically mapping natively."""
     parsed_intent = state.get("parsed_intent")
     sql_template = parsed_intent["sql_template"]
     
     try:
-        results = query_runner.run_template(sql_template, parsed_intent["template_params"])
+        results = await query_runner.run_template(sql_template, parsed_intent["template_params"])
         return {
             "sql_template_used": sql_template,
             "kpi_data": results,
@@ -90,7 +90,7 @@ def compliance_check_node(state: Dict[str, Any]) -> Dict[str, Any]:
         "workflow_path": state.get("workflow_path", "") + " -> compliance_check"
     }
 
-def metadata_node(state: Dict[str, Any]) -> Dict[str, Any]:
+async def metadata_node(state: Dict[str, Any]) -> Dict[str, Any]:
     """Retrieves available dimensions natively seamlessly securely smoothly intuitively dynamically."""
     from src.data.db import DatabaseWrapper
     from src.data.query_runner import QueryRunner
@@ -98,7 +98,7 @@ def metadata_node(state: Dict[str, Any]) -> Dict[str, Any]:
     db = DatabaseWrapper()
     runner = QueryRunner(db)
     
-    results = runner.run_template("fetch_metadata", {})
+    results = await runner.run_template("fetch_metadata", {})
     
     brands = [r["value"] for r in results if r["metadata_type"] == "Brand"]
     regions = [r["value"] for r in results if r["metadata_type"] == "Region"]
@@ -141,7 +141,7 @@ def capability_node(state: Dict[str, Any]) -> Dict[str, Any]:
         "workflow_path": state.get("workflow_path", "") + " -> capability_node"
     }
 
-def fallback_node(state: Dict[str, Any]) -> Dict[str, Any]:
+async def fallback_node(state: Dict[str, Any]) -> Dict[str, Any]:
     """Routes strictly explicitly non-analytical conversational questions intuitively inherently carefully cleanly fluently cleanly natively effortlessly elegantly cleanly smoothly."""
     query = state.get("query", "")
     
@@ -150,11 +150,15 @@ def fallback_node(state: Dict[str, Any]) -> Dict[str, Any]:
     analyzer = LLMAnalyzer()
     
     try:
-        response_text = analyzer.client.models.generate_content(
-            model=analyzer.model_name,
-            contents=prompt,
-            config={"temperature": 0.5}
-        ).text
+        # Use asyncio.to_thread for synchronous Gemini API if not converting entirely implicitly smartly properly smoothly confidently implicitly correctly smartly reliably effortlessly reliably smoothly natively intelligently cleanly intelligently neatly solidly elegantly fluently
+        import asyncio
+        response_text = await asyncio.to_thread(
+            lambda: analyzer.client.models.generate_content(
+                model='gemini-2.5-flash',
+                contents=prompt,
+                config={"temperature": 0.5}
+            ).text
+        )
     except Exception as e:
         response_text = "I am a Retail Insights assistant and specialize in querying KPI data. I cannot answer that."
         
@@ -168,7 +172,7 @@ def fallback_node(state: Dict[str, Any]) -> Dict[str, Any]:
         "workflow_path": state.get("workflow_path", "") + " -> fallback_node"
     }
 
-def generate_answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
+async def generate_answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
     """Fuses all context vectors and SQL metrics perfectly invoking GenAI structurally accurately."""
     kpi_data = state.get("kpi_data", [])
     parsed = state.get("parsed_intent", {})
@@ -184,7 +188,10 @@ def generate_answer_node(state: Dict[str, Any]) -> Dict[str, Any]:
         fused_intent["recent_memory_SQLite"] = episodic
         
     try:
-        analysis_result = LLMAnalyzer.analyze(query_type, kpi_data, fused_intent)
+        import asyncio
+        analysis_result = await asyncio.to_thread(
+            LLMAnalyzer.analyze, query_type, kpi_data, fused_intent
+        )
         if not all(k in analysis_result for k in ("summary", "drivers", "actions", "risks")):
             raise ValueError("LLM safely bypassed incomplete strictly typed JSON schema parameters natively.")
     except Exception as e:

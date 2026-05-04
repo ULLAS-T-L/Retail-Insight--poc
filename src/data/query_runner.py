@@ -9,7 +9,7 @@ class QueryRunner:
     def __init__(self, db: DatabaseWrapper):
         self.db = db
         
-    def run_template(self, template_key: str, params: Dict[str, Any]) -> List[Dict[str, Any]]:
+    async def run_template(self, template_key: str, params: Dict[str, Any]) -> List[Dict[str, Any]]:
         if template_key not in SQL_TEMPLATES:
             raise ValueError(f"Unknown explicitly mapped template dynamically locally: {template_key}")
             
@@ -21,4 +21,4 @@ class QueryRunner:
         if any(f_keyword in upper_sql for f_keyword in forbidden):
             raise ValueError(f"CRITICAL: Unauthorized destructive SQL keyword detected natively seamlessly logically cleanly effectively safely securely efficiently correctly precisely intuitively smartly natively gracefully beautifully smoothly logically.")
             
-        return self.db.execute_query(sql, params)
+        return await self.db.execute_query(sql, params)

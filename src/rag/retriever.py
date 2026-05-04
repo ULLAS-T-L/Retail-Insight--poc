@@ -9,13 +9,15 @@ def retrieve_documents(collection_name: str, query: str, top_k: int = 5) -> List
     Generic ChromaDB fetch interface smoothly bouncing bounds natively ignoring crash logic.
     """
     try:
-        from chromadb.utils import embedding_functions
+        from src.rag.cached_embedder import embed_batch
+        
         client = get_chroma_client()
-        default_ef = embedding_functions.DefaultEmbeddingFunction()
-        collection = client.get_collection(name=collection_name, embedding_function=default_ef)
+        collection = client.get_collection(name=collection_name)
+        
+        query_embeddings = embed_batch([query])
         
         results = collection.query(
-            query_texts=[query],
+            query_embeddings=query_embeddings,
             n_results=top_k
         )
         

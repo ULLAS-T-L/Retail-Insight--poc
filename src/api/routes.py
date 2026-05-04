@@ -39,8 +39,11 @@ from src.services.analyzer_service import AnalyzerService
 router = APIRouter()
 analyzer_service = AnalyzerService()
 
+from src.middleware.rate_limiter import limiter, ANALYZE_LIMIT
+
 @router.post("/analyze", response_model=AnalyzeResponse)
-async def analyze_kpi(request: AnalyzeRequest, user: User = Depends(get_authorized_user)):
+@limiter.limit(ANALYZE_LIMIT)
+async def analyze_kpi(request: Request, body_request: AnalyzeRequest, user: User = Depends(get_authorized_user)):
     try:
         from config.settings import USE_ADVANCED_GUARDRAILS
         safe_query = request.query
@@ -48,16 +51,16 @@ async def analyze_kpi(request: AnalyzeRequest, user: User = Depends(get_authoriz
         if USE_ADVANCED_GUARDRAILS:
             from src.guardrails.input_guardrails import validate_input, InputGuardrailException
             try:
-                safe_query = validate_input(request.query)
+                safe_query = validate_input(body_request.query)
             except InputGuardrailException as ge:
                 raise HTTPException(status_code=400, detail=str(ge))
 
         # Inject structured intent bounds natively seamlessly natively cleanly smartly intuitively fluently purely fluently
-        structured_intent_dict = request.structured_intent.model_dump(exclude_unset=True) if request.structured_intent else {}
+        structured_intent_dict = body_request.structured_intent.model_dump(exclude_unset=True) if body_request.structured_intent else {}
         structured_intent_dict["user_role"] = user.role
 
         # Orchestrate execution via Analyzer Service
-        result = analyzer_service.process_query(
+        result = await analyzer_service.process_query(
             raw_query=safe_query,
             structured_intent=structured_intent_dict
         )

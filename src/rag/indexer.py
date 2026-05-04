@@ -9,11 +9,7 @@ def get_chroma_client():
 
 def get_compliance_collection():
     client = get_chroma_client()
-    default_ef = embedding_functions.DefaultEmbeddingFunction()
-    return client.get_or_create_collection(
-        name="compliance_docs",
-        embedding_function=default_ef
-    )
+    return client.get_or_create_collection(name="compliance_docs")
 
 def index_documents(docs_dir: str = "data/compliance_docs/") -> bool:
     """
@@ -39,8 +35,11 @@ def index_documents(docs_dir: str = "data/compliance_docs/") -> bool:
                     ids.append(f"{filename}_chunk_{i}")
 
     if docs:
+        from src.rag.cached_embedder import embed_batch
+        embeddings = embed_batch(docs)
         collection.upsert(
             documents=docs,
+            embeddings=embeddings,
             ids=ids
         )
     return True

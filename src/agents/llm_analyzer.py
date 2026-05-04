@@ -15,6 +15,12 @@ class LLMAnalyzer:
     @staticmethod
     @langsmith_trace("llm_analysis")
     def analyze(query_type: str, results: List[Dict[str, Any]], parsed_intent: Dict[str, Any]) -> dict:
+        from src.cache.response_cache import get_cached, set_cached
+        cache_key = f"{query_type}_{json.dumps(parsed_intent)}_{json.dumps(results)}"
+        cached_response = get_cached(cache_key)
+        if cached_response:
+            return cached_response
+            
         # Load API key dynamically and raise ValueError gracefully if missing
         api_key = get_gemini_key()
             
@@ -90,6 +96,7 @@ class LLMAnalyzer:
                     from src.guardrails.hooks import validate_llm_output
                     validate_llm_output(parsed_response, compact_results)
                     
+                set_cached(cache_key, parsed_response)
                 return parsed_response
             except json.JSONDecodeError:
                 if attempt == 1:
