@@ -12,3 +12,5 @@ passlib[bcrypt]>=1.7.4
 
 streamlit>=1.30.0
 requests>=2.31.0
+aiosqlite>=0.20.0
+slowapi>=0.1.9
